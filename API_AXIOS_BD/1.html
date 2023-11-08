@@ -1,0 +1,41 @@
+<html>
+  <head> 
+    <script src="axios.min.js"></script>
+  </head>
+  <body>
+    <table border="2" class="table">
+      <thead>
+        <tr>
+          <th> ФИО</th>
+          <th> Сообщение</th>
+        </tr>
+      </thead>
+      <tbody id="список пидарасов"></tbody>
+    </table>
+    <button onclick="load()" >Загрузить</button>
+    <script>
+      function load() {
+          axios.get("http://127.0.0.1:8000/info")
+              .then(buidTable)
+      }
+      async function buidTable(resp){
+          console.log(resp);
+          if (resp.status != 200) return;
+          var body = "";
+          var idx = 0;
+          for ( let item of resp.data) {
+              idx++;
+              var r = await axios.get("http://127.0.0.1:8000/info/"+idx);
+              for (let key in item) {
+	              body +=  '<tr>'
+	                  +"<td>"+key+"</td>"
+	                  +"<td>"+item[key]+"</td>"
+	                  +"<td>"+r.data.id+"</td>"
+	                  +"</tr>";
+	          }
+          }
+          document.getElementById('список пидарасов').innerHTML = body;
+      }
+    </script>
+  </body>
+</html>
